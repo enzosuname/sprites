@@ -16,18 +16,23 @@ clock = g.time.Clock()
 
 # Sounds
 fire_sound = g.mixer.Sound("assets/shoot.wav")
+enemy_kill = g.mixer.Sound("assets/invaderkilled.wav")
 
 # Sprite Groups
 all_sprites = g.sprite.Group()
 player_group = g.sprite.Group()
 missile_group = g.sprite.Group()
+enemy_group = g.sprite.Group()
 
 # Player
 player = Player("assets/player.png")
 player_group.add(player)
 all_sprites.add(player)
 
-
+# Enemy
+enemy = Enemy()
+enemy_group.add(enemy)
+all_sprites.add(enemy)
 
 # game
 running = True
@@ -42,12 +47,16 @@ while running:
                 all_sprites.add(missile)
                 fire_sound.play()
 
+    deadshot = g.sprite.groupcollide(missile_group, enemy_group, True, True)
+    if deadshot:
+        enemy_kill.play()
+
     screen.fill(SPACE)
 
+    enemy_group.draw(screen)
     missile_group.draw(screen)
     player_group.draw(screen)
-    missile_group.update()
-    player_group.update()
+    all_sprites.update()
 
     g.display.flip()
     clock.tick(FPS)
