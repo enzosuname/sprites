@@ -30,9 +30,11 @@ player_group.add(player)
 all_sprites.add(player)
 
 # Enemy
-enemy = Enemy()
-enemy_group.add(enemy)
-all_sprites.add(enemy)
+for enemin in range (4):
+    for val in range(16):
+        enemy = Enemy(val, enemin, RED_ALIEN)
+        enemy_group.add(enemy)
+        all_sprites.add(enemy)
 
 # game
 running = True

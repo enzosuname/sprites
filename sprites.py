@@ -26,12 +26,14 @@ class Player(g.sprite.Sprite):
                 self.change_x = -4
 
 class Enemy(g.sprite.Sprite):
-    def __init__(self):
+    def __init__(self, xval, yval, image):
         g.sprite.Sprite.__init__(self)
 
-        self.image = g.image.load(RED_ALIEN)
+        self.xval = xval
+        self.yval = yval
+        self.image = g.image.load(image)
         self.rect = self.image.get_rect()
-        self.rect.center = DISPLAY_WIDTH // 2, self.rect.height
+        self.rect.center = DISPLAY_WIDTH - (100 * xval), self.rect.height - (50*yval)
 
         self.y_velo = 0
         self.x_velo = 2
@@ -39,10 +41,10 @@ class Enemy(g.sprite.Sprite):
     def update(self):
         self.rect.y += self.y_velo
         self.rect.x += self.x_velo
-        if self.rect.x == DISPLAY_WIDTH-100:
+        if self.rect.x == DISPLAY_WIDTH-50:
             self.x_velo = -2
             self.rect.y += self.rect.height
-        if self.rect.x == 100:
+        if self.rect.x == 50:
             self.x_velo = 2
             self.rect.y += self.rect.height
 
