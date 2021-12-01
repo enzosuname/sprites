@@ -31,7 +31,7 @@ all_sprites.add(player)
 
 # Enemy
 for enemin in range (4):
-    for val in range(16):
+    for val in range(8):
         enemy = Enemy(val, enemin, RED_ALIEN)
         enemy_group.add(enemy)
         all_sprites.add(enemy)
