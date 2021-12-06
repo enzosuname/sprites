@@ -30,7 +30,7 @@ class Player(g.sprite.Sprite):
 class Enemy(g.sprite.Sprite):
 
     y_level = 0
-    change_x = 1
+    change_x = 3
 
     def __init__(self, xval, yval, image):
         g.sprite.Sprite.__init__(self)
@@ -39,19 +39,19 @@ class Enemy(g.sprite.Sprite):
         self.yval = yval
         self.image = g.image.load(image)
         self.rect = self.image.get_rect()
-        self.rect.center = DISPLAY_WIDTH * 3/4 - (100 * xval), self.rect.height*4 + (50*yval)
+        self.rect.center = self.xval, self.yval
+        #self.rect.x = DISPLAY_WIDTH * 3/4 - (100 * xval)
 
-        self.y_velo = 0
-        self.x_velo = 2
-        self.counter = -1
+        self.counter = 0
 
     def update(self):
         self.rect.x += Enemy.change_x
-        if self.rect.x == DISPLAY_WIDTH-50 or self.rect.x == 50:
+        if self.rect.right == DISPLAY_WIDTH-50 or self.rect.left == 50:
             Enemy.y_level += 1
-            Enemy.change_x *= -1
             self.counter+=1
-        self.rect.y = ((Enemy.y_level - self.counter) * 50)
+            self.rect.y += self.rect.height + Enemy.y_level * 50
+            Enemy.change_x *= -1
+        self.rect.y = Enemy.y_level * 50 + self.counter + self.yval
 
 class Missile(g.sprite.Sprite):
     def __init__(self, x, y):
