@@ -30,11 +30,22 @@ player_group.add(player)
 all_sprites.add(player)
 
 # Enemy
-for enemin in range (4):
+for enemin in range (2):
     for val in range(8):
-        enemy = Enemy(100+50*val, 100+50*enemin, RED_ALIEN)
+        enemy = Enemy(100+50*val, 210 + 50*enemin, RED_ALIEN)
         enemy_group.add(enemy)
         all_sprites.add(enemy)
+for enemin in range (2):
+    for val in range(8):
+        enemy = Enemy(100+50*val, 110 + 50*enemin, YELLOW_ALIEN)
+        enemy_group.add(enemy)
+        all_sprites.add(enemy)
+for enemin in range (2):
+    for val in range(8):
+        enemy = Enemy(100+50*val, 10 + 50*enemin, GREEN_ALIEN)
+        enemy_group.add(enemy)
+        all_sprites.add(enemy)
+
 
 # game
 running = True
@@ -59,6 +70,7 @@ while running:
     missile_group.draw(screen)
     player_group.draw(screen)
     all_sprites.update()
+
 
     g.display.flip()
     clock.tick(FPS)

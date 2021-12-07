@@ -40,7 +40,6 @@ class Enemy(g.sprite.Sprite):
         self.image = g.image.load(image)
         self.rect = self.image.get_rect()
         self.rect.center = self.xval, self.yval
-        #self.rect.x = DISPLAY_WIDTH * 3/4 - (100 * xval)
 
         self.counter = 0
 
@@ -48,7 +47,7 @@ class Enemy(g.sprite.Sprite):
         self.rect.x += Enemy.change_x
         if self.rect.right == DISPLAY_WIDTH-50 or self.rect.left == 50:
             Enemy.y_level += 1
-            self.counter+=1
+            self.counter += 1
             self.rect.y += self.rect.height + Enemy.y_level * 50
             Enemy.change_x *= -1
         self.rect.y = Enemy.y_level * 50 + self.counter + self.yval
