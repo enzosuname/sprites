@@ -53,10 +53,10 @@ class Enemy(g.sprite.Sprite):
         self.rect.y = Enemy.y_level * 50 + self.counter + self.yval
 
 class Missile(g.sprite.Sprite):
-    def __init__(self, x, y):
+    def __init__(self, x, y, direction):
         g.sprite.Sprite.__init__(self)
 
-        self.y_velo = 6
+        self.y_velo = 6 * direction
 
         self.image = g.Surface((MISSILE_WIDTH, MISSILE_HEIGHT))
         self.image.fill(WHITE)
@@ -69,5 +69,5 @@ class Missile(g.sprite.Sprite):
     def update(self):
         self.rect.y -= self.y_velo
 
-        if self.rect.bottom <= 0:
+        if self.rect.bottom <= 0 or self.rect.top >= DISPLAY_LENGTH:
             self.kill()

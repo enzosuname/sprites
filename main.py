@@ -13,6 +13,7 @@ g.init()
 screen = g.display.set_mode(SIZE)
 g.display.set_caption("Jame Scene")
 clock = g.time.Clock()
+lives = 3
 
 # Sounds
 fire_sound = g.mixer.Sound("assets/shoot.wav")
@@ -21,7 +22,8 @@ enemy_kill = g.mixer.Sound("assets/invaderkilled.wav")
 # Sprite Groups
 all_sprites = g.sprite.Group()
 player_group = g.sprite.Group()
-missile_group = g.sprite.Group()
+missile_groupPLAYER = g.sprite.Group()
+missile_groupENEMY = g.sprite.Group()
 enemy_group = g.sprite.Group()
 
 # Player
@@ -46,7 +48,6 @@ for enemin in range (2):
         enemy_group.add(enemy)
         all_sprites.add(enemy)
 
-
 # game
 running = True
 while running:
@@ -55,19 +56,34 @@ while running:
             running = False
         if event.type == g.KEYDOWN:
             if event.key == g.K_SPACE:
-                missile = Missile(player.rect.centerx-2, player.rect.top)
-                missile_group.add(missile)
-                all_sprites.add(missile)
+                missilePLAYER = Missile(player.rect.centerx-2, player.rect.top, 1)
+                missile_groupPLAYER.add(missilePLAYER)
+                all_sprites.add(missilePLAYER)
                 fire_sound.play()
 
-    deadshot = g.sprite.groupcollide(missile_group, enemy_group, True, True)
+    if len(missile_groupENEMY) <= len(enemy_group)/4:
+        missileENEMY = Missile(r.randint(10, DISPLAY_WIDTH-10), enemy.rect.bottom, -1)
+        missile_groupENEMY.add(missileENEMY)
+        all_sprites.add(missileENEMY)
+        if lives <= 0:
+            missileENEMY.kill()
+
+    deadshot = g.sprite.groupcollide(missile_groupPLAYER, enemy_group, True, True)
+    playershot = g.sprite.groupcollide(missile_groupENEMY, player_group, True, False)
     if deadshot:
         enemy_kill.play()
+    if playershot:
+        lives -= 1
+        print(lives)
+        if lives <= 0:
+            player.kill()
+            enemy_group.empty()
 
     screen.fill(SPACE)
 
     enemy_group.draw(screen)
-    missile_group.draw(screen)
+    missile_groupPLAYER.draw(screen)
+    missile_groupENEMY.draw(screen)
     player_group.draw(screen)
     all_sprites.update()
 
