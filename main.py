@@ -59,6 +59,8 @@ for start in start_values:
                 block = Block(screen, x_pos, y_pos)
                 block_group.add(block)
 
+# timing
+
 clock = g.time.Clock()
 missile_previous_fire = g.time.get_ticks()
 bomb_previous_fire = g.time.get_ticks()
@@ -66,6 +68,7 @@ bomb_previous_fire = g.time.get_ticks()
 # game
 running = True
 enemy_direction = 1
+score = 0
 
 while running:
     for event in g.event.get():
@@ -73,13 +76,16 @@ while running:
             running = False
         if event.type == g.KEYDOWN:
             if event.key == g.K_SPACE:
-                missile_current_fire = g.time.get_ticks()
-                if missile_current_fire - missile_previous_fire >= MISSILE_DELAY:
-                    missile_previous_fire = missile_current_fire
-                    missilePLAYER = Missile(player.rect.centerx-2, player.rect.top, 1)
-                    missile_groupPLAYER.add(missilePLAYER)
-                    all_sprites.add(missilePLAYER)
-                    fire_sound.play()
+                if lives > 0:
+                    missile_current_fire = g.time.get_ticks()
+                    if missile_current_fire - missile_previous_fire >= MISSILE_DELAY:
+                        missile_previous_fire = missile_current_fire
+                        missilePLAYER = Missile(player.rect.centerx-2, player.rect.top, 1)
+                        missile_groupPLAYER.add(missilePLAYER)
+                        all_sprites.add(missilePLAYER)
+                        fire_sound.play()
+            elif event.key == g.K_ESCAPE:
+                lives = 0
 
     if len(missile_groupENEMY) <= len(enemy_group)/5:
         bomb_current_fire = g.time.get_ticks()
@@ -94,15 +100,14 @@ while running:
     deadshot = g.sprite.groupcollide(missile_groupPLAYER, enemy_group, True, True)
     playershot = g.sprite.groupcollide(missile_groupENEMY, player_group, True, False)
     barrier = g.sprite.groupcollide(all_sprites, block_group, True, True)
+    barrierenemy = g.sprite.groupcollide(enemy_group, block_group, False, True)
 
     if deadshot:
         enemy_kill.play()
+        score += 1
     if playershot:
         lives -= 1
         print(lives)
-        if lives <= 0:
-            all_sprites.empty()
-            enemy_group.empty()
 
     enemies = enemy_group.sprites()
     for enemy in enemies:
@@ -133,6 +138,14 @@ while running:
     # missile_groupENEMY.update()
     # player_group.update()
 
+    scoretext = SCORE.render(f"SCORE : {score}", True, WHITE)
+    screen.blit(scoretext, [25, 10])
+
+    if lives <= 0:
+        all_sprites.empty()
+        enemy_group.empty()
+        text = GAMEOVER.render(f"GAME OVER", True, RED)
+        screen.blit(text, [210, 400])
 
     g.display.flip()
     clock.tick(FPS)

@@ -1,8 +1,10 @@
 import math as m
+import pygame as g
 
 # Create color constants
 
 BLUE = (0, 0, 255)
+RED = (255, 0, 0)
 BLACK = (0, 0, 0)
 SPACE = (29, 17, 53)
 WHITE = (255, 255, 255)
@@ -27,6 +29,13 @@ PLAYER = "assets/player.png"
 RED_ALIEN = "assets/red.png"
 GREEN_ALIEN = "assets/green.png"
 YELLOW_ALIEN = "assets/yellow.png"
+
+# FONT
+
+g.font.init()
+GAMEOVER = g.font.Font('assets/unifont.ttf', 80)
+SCORE = g.font.Font('assets/unifont.ttf', 60)
+
 
 # Block
 BLOCK_WIDTH = 7
