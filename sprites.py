@@ -72,3 +72,12 @@ class Missile(g.sprite.Sprite):
 
         if self.rect.bottom <= 0 or self.rect.top >= DISPLAY_LENGTH:
             self.kill()
+
+class Block(g.sprite.Sprite):
+    def __init__(self, display, x, y):
+        g.sprite.Sprite.__init__(self)
+        self.image = g.Surface((BLOCK_WIDTH, BLOCK_HEIGHT))
+        self.image.fill(BLOCK_COLOR)
+        self.rect = self.image.get_rect()
+        self.rect.center = x, y
+        g.draw.rect(display, BLOCK_COLOR, [self.rect.x, self.rect.y, self.rect.width, self.rect.height])

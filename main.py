@@ -1,7 +1,7 @@
 import pygame as g # in terminal -> pip install pygame
 import math as m
 from settings import *
-from sprites import Player, Enemy, Missile
+from sprites import Player, Enemy, Missile, Block
 import random as r
 
 #########################################################
@@ -25,6 +25,7 @@ all_sprites = g.sprite.Group()
 player_group = g.sprite.Group()
 missile_groupPLAYER = g.sprite.Group()
 missile_groupENEMY = g.sprite.Group()
+block_group = g.sprite.Group()
 enemy_group = g.sprite.Group()
 
 # Player
@@ -46,8 +47,21 @@ for row in range (2):
         enemy = Enemy(offset+50*col, 110 + 50 * row, GREEN_ALIEN)
         enemy_group.add(enemy)
 
+# create shields
+start_values = [50, 262.5, 462.5, 675]
+for start in start_values:
+    for row_index, row in enumerate(SHEILD):
+        #print(row_index, row)
+        for col_index, col in enumerate(row):
+            if col == 'x':
+                x_pos = col_index * BLOCK_WIDTH + start
+                y_pos = row_index * BLOCK_HEIGHT + 800
+                block = Block(screen, x_pos, y_pos)
+                block_group.add(block)
+
 clock = g.time.Clock()
 missile_previous_fire = g.time.get_ticks()
+bomb_previous_fire = g.time.get_ticks()
 
 # game
 running = True
@@ -68,14 +82,18 @@ while running:
                     fire_sound.play()
 
     if len(missile_groupENEMY) <= len(enemy_group)/5:
-        missileENEMY = Missile(r.randint(100, DISPLAY_WIDTH-100), enemy.rect.top, -1)
-        missile_groupENEMY.add(missileENEMY)
-        all_sprites.add(missileENEMY)
-        if lives <= 0 or len(enemy_group) == 0:
-            missileENEMY.kill()
+        bomb_current_fire = g.time.get_ticks()
+        if bomb_current_fire - bomb_previous_fire >= BOMB_DELAY:
+            bomb_previous_fire = bomb_current_fire
+            missileENEMY = Missile(r.randint(100, DISPLAY_WIDTH-100), enemy.rect.top, -1)
+            missile_groupENEMY.add(missileENEMY)
+            all_sprites.add(missileENEMY)
+            if lives <= 0 or len(enemy_group) == 0:
+                missileENEMY.kill()
 
     deadshot = g.sprite.groupcollide(missile_groupPLAYER, enemy_group, True, True)
     playershot = g.sprite.groupcollide(missile_groupENEMY, player_group, True, False)
+    barrier = g.sprite.groupcollide(all_sprites, block_group, True, True)
 
     if deadshot:
         enemy_kill.play()
@@ -83,7 +101,7 @@ while running:
         lives -= 1
         print(lives)
         if lives <= 0:
-            player.kill()
+            all_sprites.empty()
             enemy_group.empty()
 
     enemies = enemy_group.sprites()
@@ -105,11 +123,11 @@ while running:
     screen.fill(SPACE)
 
     enemy_group.draw(screen)
-    missile_groupPLAYER.draw(screen)
-    missile_groupENEMY.draw(screen)
-    player_group.draw(screen)
+    block_group.draw(screen)
+    all_sprites.draw(screen)
 
     enemy_group.update(enemy_direction)
+    block_group.update()
     all_sprites.update()
     # missile_groupPLAYER.update()
     # missile_groupENEMY.update()
