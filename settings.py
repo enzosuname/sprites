@@ -9,6 +9,7 @@ BLACK = (0, 0, 0)
 SPACE = (29, 17, 53)
 WHITE = (255, 255, 255)
 BLOCK_COLOR = (252, 53, 3)
+GREEN = (0, 255, 0)
 
 # Game constants
 
@@ -30,12 +31,11 @@ RED_ALIEN = "assets/red.png"
 GREEN_ALIEN = "assets/green.png"
 YELLOW_ALIEN = "assets/yellow.png"
 
-# FONT
+# Font
 
 g.font.init()
-GAMEOVER = g.font.Font('assets/unifont.ttf', 80)
+END = g.font.Font('assets/unifont.ttf', 80)
 SCORE = g.font.Font('assets/unifont.ttf', 60)
-
 
 # Block
 BLOCK_WIDTH = 7

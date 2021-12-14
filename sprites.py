@@ -81,3 +81,16 @@ class Block(g.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.center = x, y
         g.draw.rect(display, BLOCK_COLOR, [self.rect.x, self.rect.y, self.rect.width, self.rect.height])
+
+class Explosion(g.sprite.Sprite):
+
+
+    EXPLOSION = []
+    EXPLOSION.append(g.image.load('assets/sprite_0.png'))
+    EXPLOSION.append(g.image.load('assets/sprite_1.png'))
+    EXPLOSION.append(g.image.load('assets/sprite_2.png'))
+    EXPLOSION.append(g.image.load('assets/sprite_3.png'))
+    EXPLOSION.append(g.image.load('assets/sprite_4.png'))
+    EXPLOSION.append(g.image.load('assets/sprite_5.png'))
+    EXPLOSION.append(g.image.load('assets/sprite_6.png'))
+    EXPLOSION.append(g.image.load('assets/sprite_7.png'))

@@ -1,7 +1,7 @@
 import pygame as g # in terminal -> pip install pygame
 import math as m
 from settings import *
-from sprites import Player, Enemy, Missile, Block
+from sprites import Player, Enemy, Missile, Block, Explosion
 import random as r
 
 #########################################################
@@ -86,6 +86,8 @@ while running:
                         fire_sound.play()
             elif event.key == g.K_ESCAPE:
                 lives = 0
+            elif event.key == g.K_BACKSPACE:
+                enemy_group.empty()
 
     if len(missile_groupENEMY) <= len(enemy_group)/5:
         bomb_current_fire = g.time.get_ticks()
@@ -117,6 +119,8 @@ while running:
             if enemies:
                 for alien in enemies:
                     alien.rect.y += 2
+                    if alien.rect.y >= 950:
+                        lives = 0
 
         elif enemy.rect.left <= 50:
             enemy_direction = 1
@@ -144,8 +148,11 @@ while running:
     if lives <= 0:
         all_sprites.empty()
         enemy_group.empty()
-        text = GAMEOVER.render(f"GAME OVER", True, RED)
+        text = END.render(f"GAME OVER", True, RED)
         screen.blit(text, [210, 400])
+    elif len(enemy_group) == 0:
+        text = END.render(f"YOU WIN", True, GREEN)
+        screen.blit(text, [240, 400])
 
     g.display.flip()
     clock.tick(FPS)
