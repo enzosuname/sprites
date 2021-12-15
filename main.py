@@ -26,6 +26,7 @@ player_group = g.sprite.Group()
 missile_groupPLAYER = g.sprite.Group()
 missile_groupENEMY = g.sprite.Group()
 block_group = g.sprite.Group()
+explosion_group = g.sprite.Group()
 enemy_group = g.sprite.Group()
 
 # Player
@@ -107,9 +108,17 @@ while running:
     if deadshot:
         enemy_kill.play()
         score += 1
+        for hit in deadshot:
+            explosion = Explosion(hit.rect.center)
+            explosion_group.add(explosion)
+            all_sprites.add(explosion)
+
     if playershot:
         lives -= 1
         print(lives)
+        explosion = Explosion(player.rect.center)
+        explosion_group.add(explosion)
+        all_sprites.add(explosion)
 
     enemies = enemy_group.sprites()
     for enemy in enemies:
@@ -138,9 +147,6 @@ while running:
     enemy_group.update(enemy_direction)
     block_group.update()
     all_sprites.update()
-    # missile_groupPLAYER.update()
-    # missile_groupENEMY.update()
-    # player_group.update()
 
     scoretext = SCORE.render(f"SCORE : {score}", True, WHITE)
     screen.blit(scoretext, [25, 10])

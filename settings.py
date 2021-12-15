@@ -37,6 +37,11 @@ g.font.init()
 END = g.font.Font('assets/unifont.ttf', 80)
 SCORE = g.font.Font('assets/unifont.ttf', 60)
 
+# Explosion
+EXPLOSION = []
+for i in range (0,8):
+    EXPLOSION.append(g.image.load(f'assets/sprite_{i}.png'))
+
 # Block
 BLOCK_WIDTH = 7
 BLOCK_HEIGHT = 7

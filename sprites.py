@@ -19,10 +19,10 @@ class Player(g.sprite.Sprite):
 
         keys = g.key.get_pressed()
         if keys[g.K_RIGHT]:
-            if self.rect.x < DISPLAY_WIDTH:
+            if self.rect.x <= DISPLAY_WIDTH:
                 self.change_x = 4
         elif keys[g.K_LEFT]:
-            if self.rect.x > 0:
+            if self.rect.x >= 0:
                 self.change_x = -4
         else:
             self.change_x = 0
@@ -83,14 +83,24 @@ class Block(g.sprite.Sprite):
         g.draw.rect(display, BLOCK_COLOR, [self.rect.x, self.rect.y, self.rect.width, self.rect.height])
 
 class Explosion(g.sprite.Sprite):
+    def __init__(self, center):
+        g.sprite.Sprite.__init__(self)
+        self.image = EXPLOSION[0]
+        self.rect = self.image.get_rect()
+        self.rect.center = center
+        self.frame = 0
+        self.framerate = 50
+        self.kill_center = center
+        self.prev_update = g.time.get_ticks()
 
-
-    EXPLOSION = []
-    EXPLOSION.append(g.image.load('assets/sprite_0.png'))
-    EXPLOSION.append(g.image.load('assets/sprite_1.png'))
-    EXPLOSION.append(g.image.load('assets/sprite_2.png'))
-    EXPLOSION.append(g.image.load('assets/sprite_3.png'))
-    EXPLOSION.append(g.image.load('assets/sprite_4.png'))
-    EXPLOSION.append(g.image.load('assets/sprite_5.png'))
-    EXPLOSION.append(g.image.load('assets/sprite_6.png'))
-    EXPLOSION.append(g.image.load('assets/sprite_7.png'))
+    def update(self):
+        now = g.time.get_ticks()
+        if now - self.prev_update > self.framerate:
+            self.prev_update = now
+            self.frame += 1
+        if self.frame == len(EXPLOSION):
+            self.kill()
+        else:
+            self.image = EXPLOSION[self.frame]
+            self.rect = self.image.get_rect()
+            self.rect.center = self.kill_center
