@@ -36,11 +36,12 @@ YELLOW_ALIEN = "assets/yellow.png"
 g.font.init()
 END = g.font.Font('assets/unifont.ttf', 80)
 SCORE = g.font.Font('assets/unifont.ttf', 60)
+START = g.font.Font('assets/unifont.ttf', 30)
 
 # Explosion
 EXPLOSION = []
 for i in range (0,8):
-    EXPLOSION.append(g.image.load(f'assets/sprite_{i}.png'))
+    EXPLOSION.append(g.transform.scale(g.image.load(f'assets/sprite_{i}.png'), (50, 50)))
 
 # Block
 BLOCK_WIDTH = 7
