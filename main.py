@@ -1,7 +1,7 @@
 import pygame as g # in terminal -> pip install pygame
 import math as m
 from settings import *
-from sprites import Player, Enemy, Missile, Block, Explosion
+from sprites import Player, Enemy, Missile, Block, Explosion, UFO
 import random as r
 
 #########################################################
@@ -11,6 +11,7 @@ g.init()
 def gameover():
     screen = g.display.set_mode(SIZE)
     clock = g.time.Clock()
+    global high_score
 
     running = True
     while running:
@@ -30,7 +31,12 @@ def gameover():
             text = END.render(f"GAME OVER", True, RED)
             screen.blit(text, [210, 400])
 
-        text = SCORE.render(f"High Score : {score}", True, WHITE)
+        if high_score < score:
+            high_score = score
+
+        scoretext = SCORE.render(f"SCORE : {score}", True, WHITE)
+        screen.blit(scoretext, [25, 10])
+        text = SCORE.render(f"High Score : {high_score}", True, WHITE)
         screen.blit(text, [175, 500])
         text = SCORE.render(f"If you wish to reset,", True, WHITE)
         screen.blit(text, [85, 600])
@@ -43,6 +49,8 @@ def gameover():
 def start():
     screen = g.display.set_mode(SIZE)
     clock = g.time.Clock()
+    global high_score
+    high_score = 0
 
     running = True
     while running:
@@ -76,7 +84,7 @@ def play():
     # game dependents
 
     screen = g.display.set_mode(SIZE)
-    g.display.set_caption("Jame Scene")
+    g.display.set_caption("Space Invaders")
     clock = g.time.Clock()
     lives = 3
     offset = 175
@@ -94,6 +102,7 @@ def play():
     missile_groupENEMY = g.sprite.Group()
     block_group = g.sprite.Group()
     explosion_group = g.sprite.Group()
+    ufo_group = g.sprite.Group()
     enemy_group = g.sprite.Group()
 
     # Player
@@ -138,6 +147,7 @@ def play():
     enemy_direction = 1
     global score
     score = 0
+    direccounter = 1
 
     while running:
         for event in g.event.get():
@@ -162,6 +172,16 @@ def play():
         playershot = g.sprite.groupcollide(missile_groupENEMY, player_group, True, False)
         barrier = g.sprite.groupcollide(all_sprites, block_group, True, True)
         barrierenemy = g.sprite.groupcollide(enemy_group, block_group, False, True)
+        ufoshot = g.sprite.groupcollide(missile_groupPLAYER, ufo_group, True, True)
+
+        if ufoshot:
+            enemy_kill.play()
+            score += 5
+            for hit in ufoshot:
+                explosion = Explosion(hit.rect.center)
+                explosion_group.add(explosion)
+                all_sprites.add(explosion)
+            direccounter += 1
 
         if deadshot:
             enemy_kill.play()
@@ -173,7 +193,6 @@ def play():
 
         if playershot:
             lives -= 1
-            print(lives)
             explosion = Explosion(player.rect.center)
 
             explosion_group.add(explosion)
@@ -186,7 +205,7 @@ def play():
 
                 if enemies:
                     for alien in enemies:
-                        alien.rect.y += 2
+                        alien.rect.y += 4
                         if alien.rect.y >= 950:
                             lives = 0
 
@@ -196,6 +215,14 @@ def play():
                 if enemies:
                     for alien in enemies:
                         alien.rect.y += 4
+
+        if len(ufo_group) == 0:
+            if direccounter % 2 == 1:
+                ufo = UFO(0, 75, UFO_IMG, 1)
+            if direccounter % 2 == 0:
+                ufo = UFO(DISPLAY_WIDTH, 75, UFO_IMG, -1)
+            ufo_group.add(ufo)
+            all_sprites.add(ufo)
 
         if len(missile_groupENEMY) <= len(enemy_group) / 5:
             bomb_current_fire = g.time.get_ticks()

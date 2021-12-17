@@ -97,3 +97,21 @@ class Explosion(g.sprite.Sprite):
             self.image = EXPLOSION[self.frame]
             self.rect = self.image.get_rect()
             self.rect.center = self.kill_center
+
+class UFO(g.sprite.Sprite):
+    def __init__(self, xval, yval, image, modifier):
+        g.sprite.Sprite.__init__(self)
+
+        self.xval = xval
+        self.yval = yval
+        self.image = g.image.load(image)
+        self.rect = self.image.get_rect()
+        self.rect.center = self.xval, self.yval
+        self.counter = 0
+        self.modifier = modifier
+
+    def update(self):
+        self.rect.x += 3 * self.modifier
+
+        if self.rect.left >= DISPLAY_WIDTH or self.rect.right <= 0:
+            self.kill()

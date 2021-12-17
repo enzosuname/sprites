@@ -30,6 +30,7 @@ PLAYER = "assets/player.png"
 RED_ALIEN = "assets/red.png"
 GREEN_ALIEN = "assets/green.png"
 YELLOW_ALIEN = "assets/yellow.png"
+UFO_IMG = "assets/ufo.png"
 
 # Font
 
@@ -71,5 +72,3 @@ SHEILD = [
     "xxx     xxx",
     "xx       xx"
 ]
-
-print(len(LAYOUT[0]))
