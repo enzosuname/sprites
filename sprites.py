@@ -44,13 +44,6 @@ class Enemy(g.sprite.Sprite):
         self.counter = 0
 
     def update(self, x_velo):
-        # self.rect.x += Enemy.change_x
-        # if self.rect.right == DISPLAY_WIDTH-50 or self.rect.left == 50:
-        #     Enemy.y_level += 1
-        #     self.counter += 1
-        #     self.rect.y += self.rect.height + Enemy.y_level * 50
-        #     Enemy.change_x *= -1
-        # self.rect.y = Enemy.y_level * 50 + self.counter + self.yval
         self.rect.x += x_velo * 2
 
 class Missile(g.sprite.Sprite):

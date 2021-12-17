@@ -17,15 +17,25 @@ def gameover():
         for event in g.event.get():
             if event.type == g.QUIT:
                 quit()
+            if event.type == g.KEYDOWN:
+                if event.key == g.K_r:
+                    running = False
 
         screen.fill(SPACE)
 
-        if result:
+        if result == False:
             text = END.render(f"YOU WIN", True, GREEN)
             screen.blit(text, [240, 400])
-        if result == False:
+        if result == True:
             text = END.render(f"GAME OVER", True, RED)
             screen.blit(text, [210, 400])
+
+        text = SCORE.render(f"High Score : {score}", True, WHITE)
+        screen.blit(text, [175, 500])
+        text = SCORE.render(f"If you wish to reset,", True, WHITE)
+        screen.blit(text, [85, 600])
+        text = SCORE.render(f"press the 'r' key", True, WHITE)
+        screen.blit(text, [125, 650])
 
         g.display.flip()
         clock.tick(FPS)
@@ -126,6 +136,7 @@ def play():
     # game
     running = True
     enemy_direction = 1
+    global score
     score = 0
 
     while running:
@@ -146,16 +157,6 @@ def play():
                     lives = 0
                 elif event.key == g.K_BACKSPACE:
                     enemy_group.empty()
-
-        if len(missile_groupENEMY) <= len(enemy_group)/5:
-            bomb_current_fire = g.time.get_ticks()
-            if bomb_current_fire - bomb_previous_fire >= BOMB_DELAY:
-                bomb_previous_fire = bomb_current_fire
-                missileENEMY = Missile(r.randint(100, DISPLAY_WIDTH-100), enemy.rect.top, -1)
-                missile_groupENEMY.add(missileENEMY)
-                all_sprites.add(missileENEMY)
-                if lives <= 0 or len(enemy_group) == 0:
-                    missileENEMY.kill()
 
         deadshot = g.sprite.groupcollide(missile_groupPLAYER, enemy_group, True, True)
         playershot = g.sprite.groupcollide(missile_groupENEMY, player_group, True, False)
@@ -196,6 +197,16 @@ def play():
                     for alien in enemies:
                         alien.rect.y += 4
 
+        if len(missile_groupENEMY) <= len(enemy_group) / 5:
+            bomb_current_fire = g.time.get_ticks()
+            if bomb_current_fire - bomb_previous_fire >= BOMB_DELAY:
+                bomb_previous_fire = bomb_current_fire
+                missileENEMY = Missile(r.choice(enemies).rect.top, enemy.rect.top, -1)
+                missile_groupENEMY.add(missileENEMY)
+                all_sprites.add(missileENEMY)
+                if lives <= 0 or len(enemy_group) == 0:
+                    missileENEMY.kill()
+
         screen.fill(SPACE)
 
         enemy_group.draw(screen)
@@ -209,11 +220,16 @@ def play():
         scoretext = SCORE.render(f"SCORE : {score}", True, WHITE)
         screen.blit(scoretext, [25, 10])
 
+        for life in range(lives):
+            screen.blit(g.image.load(PLAYER), [700 - 100 * life, 25])
+
         if lives <= 0:
             all_sprites.empty()
             enemy_group.empty()
+            result = True
             return True
         elif len(enemy_group) == 0:
+            result = False
             return False
 
         g.display.flip()
