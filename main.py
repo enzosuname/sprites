@@ -165,8 +165,6 @@ def play():
                             fire_sound.play()
                 elif event.key == g.K_ESCAPE:
                     lives = 0
-                elif event.key == g.K_BACKSPACE:
-                    enemy_group.empty()
 
         deadshot = g.sprite.groupcollide(missile_groupPLAYER, enemy_group, True, True)
         playershot = g.sprite.groupcollide(missile_groupENEMY, player_group, True, False)
